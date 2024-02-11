@@ -3,6 +3,6 @@ h2 {
   font-family: Lato;
 }
 
-canvas {
+#artCanvas {
   outline: black 1px solid;
 }
