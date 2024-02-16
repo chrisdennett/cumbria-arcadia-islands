@@ -26,10 +26,10 @@ tileMap.push([0,1,1,1,1,1,1,1,0,0]);
 tileMap.push([0,1,1,1,2,2,1,1,0,0]);
 tileMap.push([0,0,1,1,2,2,1,1,0,0]);
 tileMap.push([0,1,1,1,2,2,1,1,0,0]);
-tileMap.push([0,0,1,1,2,2,1,1,1,0]);
-tileMap.push([0,0,1,1,2,2,1,1,0,0]);
+tileMap.push([1,0,1,1,2,2,1,1,1,0]);
+tileMap.push([1,1,1,1,2,2,1,1,0,0]);
 tileMap.push([0,0,1,1,1,1,1,1,0,0]);
-tileMap.push([0,0,1,1,1,1,1,1,0,0]);
+tileMap.push([0,0,0,1,1,1,1,1,0,0]);
 
 let tileY = 0;
 
@@ -55,10 +55,5 @@ for(let i=0; i<tileMap.length; i++){
     tileY += altRowVOffset;
 }
 
+ctx.drawImage(landTile, halfOffset+cellSize*2, altRowVOffset);
 
-// ctx.drawImage(waterTile, 0, 0);
-
-
-
-
-// ctx.drawImage(landTile, halfOffset, altRowVOffset);
