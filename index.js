@@ -1,21 +1,64 @@
+import { loadImage } from "./loadImage.js";
+
 // Write Javascript code!
 const appDiv = document.getElementById('app');
 
 const canvas = document.getElementById('artCanvas');
 
-canvas.width = 400;
-canvas.height = 400;
+const waterTile = await loadImage("water.png");
+const landTile = await loadImage("land.png");
+
+const cellSize = 32;
+const cellsAcross = 10;
+const cellsDown = 10;
+
+canvas.width = cellsAcross * cellSize;
+canvas.height = cellsDown * cellSize;
 
 const ctx = canvas.getContext("2d");
 
-const cellSize = 40;
-const cols = Math.floor(canvas.width / cellSize);
-const rows = Math.floor(canvas.height / cellSize);
+const halfOffset = cellSize / 2;
+const sunkenOffset = 6;
+const altRowVOffset = 8;
 
-for(let r = 0; r<rows; r++){
-    for(let c = 0; c<rows; c++){
-        const cellX = r*cellSize;
-        const cellY = c*cellSize;
-        ctx.strokeRect(cellX,cellY,cellSize, cellSize);
+const tileMap = [];
+tileMap.push([0,1,1,1,1,1,1,1,0,0]);
+tileMap.push([0,1,1,1,2,2,1,1,0,0]);
+tileMap.push([0,0,1,1,2,2,1,1,0,0]);
+tileMap.push([0,1,1,1,2,2,1,1,0,0]);
+tileMap.push([0,0,1,1,2,2,1,1,1,0]);
+tileMap.push([0,0,1,1,2,2,1,1,0,0]);
+tileMap.push([0,0,1,1,1,1,1,1,0,0]);
+tileMap.push([0,0,1,1,1,1,1,1,0,0]);
+
+let tileY = 0;
+
+for(let i=0; i<tileMap.length; i++){
+    const row = tileMap[i];
+    for(let j=0; j<row.length; j++){
+        const cellType = row[j];
+      
+        let tileX = cellSize * j;
+
+        if(i % 2 !== 0){
+            tileX += halfOffset;
+        }
+
+        if(cellType === 1){
+            ctx.drawImage(landTile, tileX, tileY);
+        }
+        if(cellType === 2){ 
+            ctx.drawImage(waterTile, tileX, tileY+sunkenOffset);
+        }
     }
+
+    tileY += altRowVOffset;
 }
+
+
+// ctx.drawImage(waterTile, 0, 0);
+
+
+
+
+// ctx.drawImage(landTile, halfOffset, altRowVOffset);
