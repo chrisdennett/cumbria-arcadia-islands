@@ -1,12 +1,12 @@
-import { loadImage } from "./loadImage.js";
+import { loadImage } from "./utils/loadImage.js";
 
 // Write Javascript code!
 const appDiv = document.getElementById('app');
 
 const canvas = document.getElementById('artCanvas');
 
-const waterTile = await loadImage("water.png");
-const landTile = await loadImage("land.png");
+const waterTile = await loadImage("/assets/water.png");
+const landTile = await loadImage("/assets/land.png");
 
 const cellSize = 32;
 const cellsAcross = 10;
