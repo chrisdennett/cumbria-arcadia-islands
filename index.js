@@ -24,7 +24,7 @@ const refCtx = refCanvas.getContext("2d");
 const {width,height} = referenceMap;
 refCanvas.width = width;
 refCanvas.height = height;
-refCtx.drawImage(referenceMap,0,0, refCanvas.width, refCanvas.height);
+
 
 // guide grid
 const gridCellsAcross = 40;
@@ -32,32 +32,53 @@ const gridCellSize = width / gridCellsAcross;
 const gridCellsDown = height / gridCellSize;
 
 // create grid with zeros for all
-const tileTypeGrid = [];
-//
-for(let i=0; i<gridCellsDown; i++){
-    let row = [];
-    for(let j=0; j<gridCellsAcross;j++){
-        row.push("0");
-    }
-    tileTypeGrid.push(row);
-}
-
-refCtx.font = `${gridCellSize}px sans serif`;
-refCtx.textAlign = "left";
-refCtx.textBaseline = "hanging";
-
-refCtx.strokeStyle = "rgba(0,0,0,0.3)";
-for(let a=0; a<gridCellsDown; a++){
-    for(let b=0; b<gridCellsAcross; b++){
-        let xPos = b*gridCellSize;
-        let yPos = a*gridCellSize;
-        refCtx.strokeRect(xPos, yPos, gridCellSize, gridCellSize);
-
-        const cellType = tileTypeGrid[a][b];
-
-        refCtx.fillText(cellType, xPos+4, yPos + 2);
-    }
-}
-
+const tileTypeGrid = getTileTypeGrid(gridCellsDown, gridCellsAcross);
+drawTileTypeRefGrid();
 drawTileMap(canvas,testTileMap);
+
+refCanvas.addEventListener("click", (e) => {
+    const clickX = e.offsetX;
+    const clickY = e.offsetY;
+
+    const cellCol = Math.floor(clickX / gridCellSize);
+    const cellRow = Math.floor(clickY / gridCellSize);
+
+    tileTypeGrid[cellRow][cellCol] = "2";
+    drawTileTypeRefGrid();
+})
+
+function getTileTypeGrid(gridCellsDown, gridCellsAcross){
+    const tileTypeGrid = [];
+    //
+    for(let i=0; i<gridCellsDown; i++){
+        let row = [];
+        for(let j=0; j<gridCellsAcross;j++){
+            row.push("0");
+        }
+        tileTypeGrid.push(row);
+    }
+    return tileTypeGrid;
+}
+
+function drawTileTypeRefGrid(){
+    refCtx.drawImage(referenceMap,0,0, refCanvas.width, refCanvas.height);
+    refCtx.font = `${gridCellSize}px sans serif`;
+    refCtx.textAlign = "left";
+    refCtx.textBaseline = "hanging";
+
+    refCtx.strokeStyle = "rgba(0,0,0,0.3)";
+    for(let a=0; a<gridCellsDown; a++){
+        for(let b=0; b<gridCellsAcross; b++){
+            let xPos = b*gridCellSize;
+            let yPos = a*gridCellSize;
+            refCtx.strokeRect(xPos, yPos, gridCellSize, gridCellSize);
+
+            const cellType = tileTypeGrid[a][b];
+
+            refCtx.fillText(cellType, xPos+4, yPos + 2);
+        }
+    }
+}
+
+
 
