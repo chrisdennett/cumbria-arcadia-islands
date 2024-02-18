@@ -8,7 +8,7 @@ const refCanvas = document.getElementById('referenceCanvas');
 const referenceMap = await loadImage("/assets/cumbria-map.jpg");
 
 // change to be "nothing", "land", "sea", "mountain", "riverLeftRight", "riverRightLeft"
-const tileTypes = ["0","1","2"];
+const tileTypes = ["", "0","1","2"];
 
 // test tile Map
 const testTileMap = [];
@@ -46,9 +46,9 @@ refCanvas.addEventListener("click", (e) => {
     const cellCol = Math.floor(clickX / gridCellSize);
     const cellRow = Math.floor(clickY / gridCellSize);
 
+    // todo - put this into a separate function to get next type
     const currType = tileTypeGrid[cellRow][cellCol];
     const currTypeIndex = tileTypes.indexOf(currType);
-    console.log("currTypeIndex: ", currTypeIndex)
     const nextIndex = currTypeIndex === tileTypes.length -1 ? 0 : currTypeIndex + 1;
     const nextType = tileTypes[nextIndex];
 
@@ -62,7 +62,7 @@ function getTileTypeGrid(gridCellsDown, gridCellsAcross){
     for(let i=0; i<gridCellsDown; i++){
         let row = [];
         for(let j=0; j<gridCellsAcross;j++){
-            row.push("0");
+            row.push("");
         }
         tileTypeGrid.push(row);
     }
@@ -75,16 +75,18 @@ function drawTileTypeRefGrid(){
     refCtx.textAlign = "left";
     refCtx.textBaseline = "hanging";
 
-    refCtx.strokeStyle = "rgba(0,0,0,0.3)";
+    refCtx.strokeStyle = "rgba(0,0,0,0.15)";
     for(let a=0; a<gridCellsDown; a++){
         for(let b=0; b<gridCellsAcross; b++){
             let xPos = b*gridCellSize;
             let yPos = a*gridCellSize;
-            refCtx.strokeRect(xPos, yPos, gridCellSize, gridCellSize);
+            
 
             const cellType = tileTypeGrid[a][b];
 
             refCtx.fillText(cellType, xPos+4, yPos + 2);
+
+            refCtx.strokeRect(xPos, yPos, gridCellSize, gridCellSize);
         }
     }
 }
