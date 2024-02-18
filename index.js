@@ -1,79 +1,63 @@
+import { drawTileMap } from "./utils/drawTileMap.js";
 import { loadImage } from "./utils/loadImage.js";
 
 // Write Javascript code!
-const appDiv = document.getElementById('app');
-
 const canvas = document.getElementById('artCanvas');
+const refCanvas = document.getElementById('referenceCanvas');
 
-const waterTile = await loadImage("/assets/water.png");
-const landTile = await loadImage("/assets/land.png");
+const referenceMap = await loadImage("/assets/cumbria-map.jpg");
 
-const cellSize = 32;
-const cellsAcross = 10;
-const cellsDown = 10;
+// test tile Map
+const testTileMap = [];
+testTileMap.push([0, 1,   1,1,2,2,1,1,0,0]);
+testTileMap.push([0, 1,   1,1,2,2,1,1,0,0]);
+testTileMap.push([0, 0,   1,1,2,2,1,1,0,0]);
+testTileMap.push([0, 1,   1,1,2,2,1,1,0,0]);
+testTileMap.push([1, 0,   1,1,2,2,1,1,1,0]);
+testTileMap.push([1, 1,   1,1,2,2,1,1,0,0]);
+testTileMap.push([0, 0,   1,1,1,"1-1-1-1",1,1,0,0]);
+testTileMap.push([0, 0,   0,1,1,1,1,1,0,0]);
+testTileMap.push([0, 0, "1-2-1-2",1,1,1,1,1,0,0]);
 
-canvas.width = cellsAcross * cellSize;
-canvas.height = cellsDown * cellSize;
+// reference map
+const refCtx = refCanvas.getContext("2d");
+const {width,height} = referenceMap;
+refCanvas.width = width;
+refCanvas.height = height;
+refCtx.drawImage(referenceMap,0,0, refCanvas.width, refCanvas.height);
 
-const ctx = canvas.getContext("2d");
+// guide grid
+const gridCellsAcross = 40;
+const gridCellSize = width / gridCellsAcross;
+const gridCellsDown = height / gridCellSize;
 
-const halfOffset = cellSize / 2;
-const sunkenOffset = 6;
-const altRowVOffset = 8;
-
-const tileMap = [];
-tileMap.push([0, 1,   1,1,2,2,1,1,0,0]);
-
-tileMap.push([0, 1,   1,1,2,2,1,1,0,0]);
-tileMap.push([0, 0,   1,1,2,2,1,1,0,0]);
-tileMap.push([0, 1,   1,1,2,2,1,1,0,0]);
-tileMap.push([1, 0,   1,1,2,2,1,1,1,0]);
-tileMap.push([1, 1,   1,1,2,2,1,1,0,0]);
-tileMap.push([0, 0,   1,1,1,"1-1-1-1",1,1,0,0]);
-tileMap.push([0, 0,   0,1,1,1,1,1,0,0]);
-tileMap.push([0, 0, "1-2-1-2",1,1,1,1,1,0,0]);
-
-let tileY = 0;
-
-for(let i=0; i<tileMap.length; i++){
-    const row = tileMap[i];
-    for(let j=0; j<row.length; j++){
-        let cellType = row[j];
-
-        // split values like 1-1-1
-        const str = cellType.toString();
-        let layers = [];
-        if(str.indexOf("-") > 0){
-            let layerStrings = str.split("-");
-            cellType = parseInt(layerStrings.shift());
-            layers = layerStrings.map(str => parseInt(str));
-        }
-      
-        let tileX = cellSize * j;
-
-        if(i % 2 !== 0){
-            tileX += halfOffset;
-        }
-
-        drawTile(cellType, tileX, tileY);
-
-        for(let i=0; i<layers.length; i++){
-            const type = layers[i];
-            console.log(type);
-            const layerOffset = (i+1) * halfOffset;
-            const layerY = tileY - layerOffset;
-            drawTile(type, tileX, layerY);
-        }
+// create grid with zeros for all
+const tileTypeGrid = [];
+//
+for(let i=0; i<gridCellsDown; i++){
+    let row = [];
+    for(let j=0; j<gridCellsAcross;j++){
+        row.push("0");
     }
-
-    tileY += altRowVOffset;
+    tileTypeGrid.push(row);
 }
 
-function drawTile(type, x, y){
-    if(type === 1){
-        ctx.drawImage(landTile, x, y);
-    }
-    if(type === 2){ 
-        ctx.drawImage(waterTile, x, y+sunkenOffset);
+refCtx.font = `${gridCellSize}px sans serif`;
+refCtx.textAlign = "left";
+refCtx.textBaseline = "hanging";
+
+refCtx.strokeStyle = "rgba(0,0,0,0.3)";
+for(let a=0; a<gridCellsDown; a++){
+    for(let b=0; b<gridCellsAcross; b++){
+        let xPos = b*gridCellSize;
+        let yPos = a*gridCellSize;
+        refCtx.strokeRect(xPos, yPos, gridCellSize, gridCellSize);
+
+        const cellType = tileTypeGrid[a][b];
+
+        refCtx.fillText(cellType, xPos+4, yPos + 2);
     }
 }
+
+drawTileMap(canvas,testTileMap);
+
