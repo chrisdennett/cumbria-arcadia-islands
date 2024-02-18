@@ -7,6 +7,9 @@ const refCanvas = document.getElementById('referenceCanvas');
 
 const referenceMap = await loadImage("/assets/cumbria-map.jpg");
 
+// change to be "nothing", "land", "sea", "mountain", "riverLeftRight", "riverRightLeft"
+const tileTypes = ["0","1","2"];
+
 // test tile Map
 const testTileMap = [];
 testTileMap.push([0, 1,   1,1,2,2,1,1,0,0]);
@@ -43,7 +46,13 @@ refCanvas.addEventListener("click", (e) => {
     const cellCol = Math.floor(clickX / gridCellSize);
     const cellRow = Math.floor(clickY / gridCellSize);
 
-    tileTypeGrid[cellRow][cellCol] = "2";
+    const currType = tileTypeGrid[cellRow][cellCol];
+    const currTypeIndex = tileTypes.indexOf(currType);
+    console.log("currTypeIndex: ", currTypeIndex)
+    const nextIndex = currTypeIndex === tileTypes.length -1 ? 0 : currTypeIndex + 1;
+    const nextType = tileTypes[nextIndex];
+
+    tileTypeGrid[cellRow][cellCol] = nextType;
     drawTileTypeRefGrid();
 })
 
