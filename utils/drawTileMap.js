@@ -6,13 +6,14 @@ const landTile = await loadImage("/assets/land.png");
 export function drawTileMap(canvas, tileMap){
 
     const cellSize = 32;
-    const cellsAcross = 10;
+    const cellsAcross = tileMap[0].length
+    const cellsDown = tileMap.length;
     const halfOffset = cellSize / 2;
     const sunkenOffset = 6;
     const altRowVOffset = 8;
 
     canvas.width = cellsAcross * cellSize;
-    canvas.height = tileMap.length * altRowVOffset + cellSize;
+    canvas.height = cellsDown * altRowVOffset + cellSize;
     const ctx = canvas.getContext("2d");
 
     let tileY = 0;
@@ -27,8 +28,8 @@ export function drawTileMap(canvas, tileMap){
             let layers = [];
             if(str.indexOf("-") > 0){
                 let layerStrings = str.split("-");
-                cellType = parseInt(layerStrings.shift());
-                layers = layerStrings.map(str => parseInt(str));
+                cellType = layerStrings.shift();
+                layers = layerStrings.map(str => str);
             }
           
             let tileX = cellSize * j;
@@ -52,10 +53,10 @@ export function drawTileMap(canvas, tileMap){
 }
 
 function drawTile(ctx, type, x, y, sunkenOffset){
-    if(type === 1){
+    if(type === "0"){
         ctx.drawImage(landTile, x, y);
     }
-    if(type === 2){ 
+    if(type === "1"){ 
         ctx.drawImage(waterTile, x, y+sunkenOffset);
     }
 }

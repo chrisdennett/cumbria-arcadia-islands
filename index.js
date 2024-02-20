@@ -7,7 +7,7 @@ const refCanvas = document.getElementById('referenceCanvas');
 
 const referenceMap = await loadImage("/assets/cumbria-map.jpg");
 
-// change to be "nothing", "land", "sea", "mountain", "riverLeftRight", "riverRightLeft"
+// change to be "nothing", "land", "sea", "beach", "lake" "mountain", "riverLeftRight", "riverRightLeft"
 const tileTypes = ["", "0","1","2"];
 
 // test tile Map
@@ -37,7 +37,7 @@ const gridCellsDown = height / gridCellSize;
 // create grid with zeros for all
 const tileTypeGrid = getTileTypeGrid(gridCellsDown, gridCellsAcross);
 drawTileTypeRefGrid();
-drawTileMap(canvas,testTileMap);
+
 
 refCanvas.addEventListener("click", (e) => {
     const clickX = e.offsetX;
@@ -54,6 +54,7 @@ refCanvas.addEventListener("click", (e) => {
 
     tileTypeGrid[cellRow][cellCol] = nextType;
     drawTileTypeRefGrid();
+    drawTileMap(canvas,tileTypeGrid);
 })
 
 function getTileTypeGrid(gridCellsDown, gridCellsAcross){
